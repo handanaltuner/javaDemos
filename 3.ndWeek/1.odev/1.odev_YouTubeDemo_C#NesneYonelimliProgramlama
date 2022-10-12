@@ -1,0 +1,183 @@
+﻿using System;
+
+namespace YouTubeEgitim
+{
+  class Program
+  {
+    static void Main(string[] args)
+    {
+    //1.Örnek
+    //int sayi1=10;
+    //int sayi2=20;
+    //sayi1=sayi2;
+    //sayi2=100;
+     
+    //2.Örnek
+    //int[]sayilar1=new []{1,2,3};
+    //int[]sayilar2=new []{10,20,30};
+    //sayilar1=sayilar2;
+     
+    //sayilar2[0]=1000;
+    //Console.WriteLine(sayilar1[0]);  
+    
+    //3.Örnek
+    
+    //IoC Container
+	
+	
+	CustomerManager customerManager = new CustomerManager(new Customer(), new CarCreditManager(), new MilitaryCreditManager());
+	
+	customerManager.GiveCredit();
+		Console.ReadLine();
+
+   	}
+    }
+    //inteface'lerin amacı yazılımdaki bağımlılıkları engellemektir,İf'lerden kurtarmaktır.  
+    //Class'lar, o nesneyi tanımlarlar.
+	//Bir sınıf, sadece bir sınıfı inherit edebilir.
+	//Bir sınıf, birden fazla interface'yi iplemente edebilir.
+   //Abtract class
+	
+    class CreditManager
+    {
+    	public void Calculate(int creditType)
+        {
+		if(creditType==1)//esnaf
+		{
+
+		}
+      
+		
+		if(creditType==2)//ogretmen
+		{
+
+		}
+		Console.WriteLine("Hesaplandı");
+        
+        	}
+        
+       	public void Save()
+
+		{
+            Console.WriteLine("Kredi verildi");
+       		}
+   	 }
+    
+	
+	interface ICreditManager
+  
+  	{
+	  void Calculate();
+	  void Save();
+ 	 }
+	
+	abstract class BaseCreditManager:ICreditManager
+	{
+			public abstract void Calculate();
+		
+			
+			public virtual void Save()
+			{
+			Console.WriteLine("Kaydedildi");
+	}
+
+	class TeacherCreditManager: BaseCreditManager,  ICreditManager
+	{
+
+			public override void Calculate()
+		{
+			Console.WriteLine("Öğretmen kredisi hesaplandı");
+		}
+
+		public override void Save()
+		{
+		//
+		base.Save();
+		//
+		}
+		
+	
+	}
+
+
+	class MilitaryCreditManager:BaseCreditManager, ICreditManager
+	{	//DRY 
+		//hesaplamalar
+		public override void Calculate()
+		{
+		Console.WriteLine("Asker  kredisi hesaplandı");
+		}
+			
+	}
+
+	class CarCreditManager:BaseCreditManager, ICreditManager
+	{
+		//hesaplamalar
+		public override void Calculate()
+		{
+		Console.WriteLine("Araba  kredisi hesaplandı");
+		}
+			
+	}
+
+	//SOLİD
+	class Customer
+	{
+		public Customer()
+		{
+		Console.WriteLine("müşteri nesnesi başlatıldı");
+		}
+		public int Id {get;set;}
+		public string City {get; set;}
+
+	 	}
+	class Person:Customer
+		{
+		public string FirstName{get;set;}
+		public string LastName{get;set;}
+		public string NationalIdendity{get;set;}
+	}
+	
+
+
+	class Company:Customer
+	  {
+		public string CompanyName{get;set;}
+		public string TaxNumber{get;set;}
+	}
+
+
+		//Katmanlı Mimariler
+		//Customer Manager, müşteri ekleme-silme işlemleri yapılır.
+
+	class CustomerManager
+		{
+
+			private Customer _customer;
+			private ICreditManager _creditManager;
+
+			public CustomerManager(Customer customer, ICreditManager creditManager)
+			{
+				_customer=customer;
+				_creditManager=creditManager;
+			}
+			public void Save()
+			{
+				Console.WriteLine("Müşteri kaydedildi: ");
+			}
+
+			public void Delete()
+			{
+				Console.WriteLine("Müşteri silindi: ");
+			}
+			
+			public void GiveCredit()
+			{
+			_creditManager.Calculate();
+			Console.WriteLine();
+			}
+
+
+		}
+	}
+}
